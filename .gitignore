@@ -1,0 +1,36 @@
+# Sistemas operacionais e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+*.local
+.claude/settings.local.json
+
+# Logs e temporários
+*.log
+tmp/
+temp/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+htmlcov/
+.coverage
+
+# Node e frontend
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.next/
