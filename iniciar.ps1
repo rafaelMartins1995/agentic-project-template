@@ -21,6 +21,12 @@ if (-not (Get-Command $ClaudeCommand -ErrorAction SilentlyContinue)) {
 Set-Location $RootDir
 
 Write-Host 'Verificando o plugin Superpowers...'
+$MarketplaceList = (& $ClaudeCommand plugin marketplace list 2>$null | Out-String)
+if ($MarketplaceList -notmatch '(?i)claude-plugins-official') {
+    Write-Host 'Registrando o marketplace oficial de plugins...'
+    & $ClaudeCommand plugin marketplace add anthropics/claude-plugins-official *> $null
+}
+
 $PluginList = (& $ClaudeCommand plugin list 2>$null | Out-String)
 if ($PluginList -match '(?i)superpowers') {
     Write-Host 'Superpowers já está instalado.'

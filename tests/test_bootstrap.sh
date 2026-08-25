@@ -57,4 +57,49 @@ if grep -q 'plugin install' "$CALL_LOG"; then
 fi
 grep -q -- '--name setup-projeto' "$CALL_LOG"
 
+FAKE_NO_MARKETPLACE="$TEMP_DIR/fake-claude-no-marketplace"
+MARKETPLACE_STATE="$TEMP_DIR/marketplace-state"
+: >"$MARKETPLACE_STATE"
+cat >"$FAKE_NO_MARKETPLACE" <<'FAKE_NOMKT'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >>"${AGENTIC_TEST_LOG:?}"
+STATE_FILE="${AGENTIC_TEST_STATE:?}"
+if [ "${1:-}" = "plugin" ] && [ "${2:-}" = "marketplace" ] && [ "${3:-}" = "add" ]; then
+  printf '%s\n' 'claude-plugins-official' > "$STATE_FILE"
+  exit 0
+fi
+if [ "${1:-}" = "plugin" ] && [ "${2:-}" = "marketplace" ] && [ "${3:-}" = "list" ]; then
+  [ -s "$STATE_FILE" ] && cat "$STATE_FILE"
+  exit 0
+fi
+if [ "${1:-}" = "plugin" ] && [ "${2:-}" = "list" ]; then
+  exit 0
+fi
+if [ "${1:-}" = "plugin" ] && [ "${2:-}" = "install" ]; then
+  if [ -s "$STATE_FILE" ]; then
+    exit 0
+  fi
+  printf '%s\n' 'Marketplace "claude-plugins-official" not found' >&2
+  exit 1
+fi
+exit 0
+FAKE_NOMKT
+chmod +x "$FAKE_NO_MARKETPLACE"
+
+: >"$CALL_LOG"
+set +e
+AGENTIC_CLAUDE_BIN="$FAKE_NO_MARKETPLACE" AGENTIC_TEST_LOG="$CALL_LOG" AGENTIC_TEST_STATE="$MARKETPLACE_STATE" "$ROOT_DIR/iniciar.sh" >"$TEMP_DIR/no-marketplace.log" 2>&1
+no_marketplace_status=$?
+set -e
+
+if [ "$no_marketplace_status" -ne 0 ]; then
+  printf '%s\n' "Falha: bootstrap deveria registrar o marketplace ausente e seguir, retornou $no_marketplace_status" >&2
+  cat "$TEMP_DIR/no-marketplace.log" >&2
+  exit 1
+fi
+
+grep -q 'plugin marketplace add anthropics/claude-plugins-official' "$CALL_LOG"
+grep -q 'plugin install superpowers@claude-plugins-official --scope user' "$CALL_LOG"
+grep -q -- '--name setup-projeto' "$CALL_LOG"
+
 printf '%s\n' 'BOOTSTRAP APROVADO'

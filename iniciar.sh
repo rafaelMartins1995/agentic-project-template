@@ -25,6 +25,11 @@ fi
 cd "$ROOT_DIR"
 
 printf '%s\n' 'Verificando o plugin Superpowers...'
+if ! "$CLAUDE_COMMAND" plugin marketplace list 2>/dev/null | grep -qi 'claude-plugins-official'; then
+  printf '%s\n' 'Registrando o marketplace oficial de plugins...'
+  "$CLAUDE_COMMAND" plugin marketplace add anthropics/claude-plugins-official >/dev/null 2>&1 || true
+fi
+
 if "$CLAUDE_COMMAND" plugin list 2>/dev/null | grep -qi 'superpowers'; then
   printf '%s\n' 'Superpowers já está instalado.'
 else
