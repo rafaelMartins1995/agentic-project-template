@@ -11,6 +11,7 @@ Use o menor número de agentes capaz de produzir evidência confiável.
 | Revisar comportamento e manutenção | Revisor de código | Equilibrado | Não | Achados por severidade |
 | Revisar riscos de segurança | Revisor de segurança | Equilibrado | Não | Ameaças, evidências e mitigação |
 | Atualizar documentação factual | Documentador | Econômico | Somente docs | Documento e fontes |
+| Diagnosticar dependência ausente ou incompatível | Auditor de dependências | Econômico | Não | Diagnóstico e comando recomendado |
 
 ## Economia de contexto e tokens
 
