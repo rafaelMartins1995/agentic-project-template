@@ -16,6 +16,7 @@ O catálogo separa método, agentes e ferramentas. A entrevista registra apenas 
 ## Regras de instalação
 
 - Instalar automaticamente apenas o Superpowers.
+- Delegar ao Auditor de dependências o diagnóstico de dependências de linguagem (Python/Node) ausentes ou incompatíveis antes de propor instalação.
 - Registrar ferramentas opcionais em `docs/engineering/TOOLING.md` antes de instalar.
 - Pedir autorização para dependências de produção, autenticação, escrita externa ou custos.
 - Preferir ferramentas locais para lint, testes e build.
